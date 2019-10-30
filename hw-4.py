@@ -88,11 +88,9 @@ def generate_individual(cities_dict, num_cities, start_city):
 
 
 def generate_child(best_connection, cities_dict, num_cities, start_city):
-    count = 0
     initial_cities_list = []
-    for key, value in cities_dict.iteritems():
-        initial_cities_list[count] = value
-        count += 1
+    for key in cities_dict.keys():
+        initial_cities_list.append(key)
 
     numbers = random.sample(range(num_cities), num_cities)
     cities_list = []
