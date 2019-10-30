@@ -224,7 +224,7 @@ if __name__ == "__main__":
         while i < popsize:
             traveler = generate_child(genome, cities_dict, num_cities, start_city)
             population.append(traveler)
-            i++
+            i += 1
         count += 1
         
     best_traveler = find_parent(population)
