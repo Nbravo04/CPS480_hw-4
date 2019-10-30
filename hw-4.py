@@ -113,7 +113,7 @@ def generate_child(best_connection, cities_dict, num_cities, start_city):
 
 def mutate(child, num_cities, cities_dict, mutation_chance):
     if mutation_chance <= random.random():
-        number = random.nextint(0, num_cities)
+        number = random.randint(1, num_cities-1)
         i = child.visited.index(child.visited[number])
         if i + 1 == num_cities:
             child.visited[i], child.visited[i - 1] = child.visited[i - 1], child.visited[i]
