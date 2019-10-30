@@ -143,18 +143,22 @@ def best_parent_connection(parent, cities_dict):
     to all the children.
     """
     best_connection = 10000000
-    from_city = parent.start_city
-    for city in parent.visited:
-        this_connection = get_distance(cities_dict, from_city, city)
+    i = 0
+    while i < parent.num_cities:
+        from_city = parent.visited[i]
+        i += 1
+        end_city = parent.visited[i]
+        this_connection = get_distance(cities_dict, from_city, end_city)
         if this_connection < best_connection:
             best_connection = this_connection
             start = from_city
-            end = city
+            end = end_city
+        
     this_connection = get_distance(cities_dict, parent.visited[-1], parent.start_city)
     if this_connection < best_connection:
         best_connection = this_connection
-        start = from_city
-        end = parent.visited[1]
+        start = parent.visited[-1]
+        end = parent.start_city
     best_connection_info = {
         "start": start,
         "end": end,
