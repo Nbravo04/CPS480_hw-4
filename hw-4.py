@@ -29,7 +29,7 @@ class Traveler:
         self.start_city = start_city
         self.total_dist = total_dist
         self.visited = visited
-        self.num_cities = num - 1
+        self.num_cities = num
 
     def completed(self, city):
         if city == self.start_city and self.visited == self.num_cities:
@@ -40,9 +40,9 @@ class Traveler:
     def __str__(self):
         my_string = 'Start City: {}, Num of cities visited: {},' \
                     ' Cities left to visit: {}'.format(self.start_city, self.visited, self.num_cities - self.visited)
-        
+
         return my_string
-        
+
 
 # Functions
 def get_dict(file):
@@ -54,7 +54,6 @@ def get_dict(file):
     for line in csv_reader:
         if count == 0:
             count += 1
-            city_dict['idx'] = line[1:]
             continue
         else:
             city_dict[line[0]] = line[1:]
@@ -73,16 +72,17 @@ def get_distance(cities_dict, city1, city2):
 
 
 def generate_individual(cities_dict, num_cities, start_city):
-    count = 0
     initial_cities_list = []
-    for key, value in cities_dict.iteritems():
-        initial_cities_list[count] = value
-        count += 1
+    for key in cities_dict.keys():
+        initial_cities_list.append(key)
 
     numbers = random.sample(range(num_cities), num_cities)
     cities_list = [start_city]
     for number in numbers:
-        cities_list.append(initial_cities_list[number])
+        if initial_cities_list[number] == start_city:
+            continue
+        else:
+            cities_list.append(initial_cities_list[number])
 
     return Traveler(start_city, fitness_function(cities_list, cities_dict), cities_dict, num_cities)
 
@@ -121,7 +121,7 @@ def mutate(child, num_cities, cities_dict, mutation_chance):
             child.visited[i], child.visited[i - 1] = child.visited[i - 1], child.visited[i]
         else:
             child.visited[i], child.visited[i + 1] = child.visited[i + 1], child.visited[i]
-        child.total_dist = fitness_function(child.visited, cities_dict)
+        child.total_distance = fitness_function(child.visited, cities_dict)
     return child
 
 
@@ -142,16 +142,18 @@ def fitness_function(solution, cities_dict):
     score += get_distance(cities_dict, solution[iterator], solution[0])
     return score
 
+
 def find_parent(population, cities_dict):
-    for traveler inlation:
+    for traveler in population:
         if best_distance:
-            if best_distance > travler.total_dist:
+            if best_distance > traveler.total_dist:
                 best_distance = traveler.total_dist
                 best_traveler = traveler
         else:
             best_distance = traveler.total_dist
             best_traveler = traveler
     return best_traveler
+
 
 def best_parent_connection(parent, cities_dict):
     """
@@ -200,11 +202,15 @@ if __name__ == "__main__":
 
     cities = get_dict(file1)
 
-    #print(get_distance(cities, 'Bear', 'Camden'))
+    # print(get_distance(cities, 'Bear', 'Camden'))
 
-    t1 = Traveler('Bear', 0, 0, len(cities.keys()))
-    print(t1)
+    population = []
+
+    for i in range(popsize):
+        traveler = generate_individual(cities, len(cities.keys()), 'Bear')
+        population.append(traveler)
     
+
     # seed = sys.argv[1]
     # maxgen = sys.argv[2]
     # popsize = sys.argv[3]
