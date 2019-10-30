@@ -37,6 +37,12 @@ class Traveler:
         else:
             return False
 
+    def __str__(self):
+        my_string = 'Start City: {}, Num of cities visited: {},' \
+                    ' Cities left to visit: {}'.format(self.start_city, self.visited, self.num_cities - self.visited)
+        
+        return my_string
+        
 
 # Functions
 def get_dict(file):
@@ -153,7 +159,7 @@ def best_parent_connection(parent, cities_dict):
             best_connection = this_connection
             start = from_city
             end = end_city
-        
+
     this_connection = get_distance(cities_dict, parent.visited[-1], parent.start_city)
     if this_connection < best_connection:
         best_connection = this_connection
@@ -184,10 +190,13 @@ if __name__ == "__main__":
 
     cities = get_dict(file1)
 
-    print(get_distance(cities, 'Bear', 'Camden'))
+    #print(get_distance(cities, 'Bear', 'Camden'))
 
-    seed = sys.argv[1]
-    maxgen = sys.argv[2]
-    popsize = sys.argv[3]
-    bestrate = sys.argv[4]
-    mutrate = sys.argv[5]
+    t1 = Traveler('Bear', 0, 0, len(cities.key()))
+    print(t1)
+    
+    # seed = sys.argv[1]
+    # maxgen = sys.argv[2]
+    # popsize = sys.argv[3]
+    # bestrate = sys.argv[4]
+    # mutrate = sys.argv[5]
