@@ -136,7 +136,7 @@ def fitness_function(solution, cities_dict):
     """
     score = 0
     iterator = 0
-    while iterator < len(solution):
+    while iterator < len(solution)-1:
         score += get_distance(cities_dict, solution[iterator], solution[iterator + 1])
         iterator += 1
     score += get_distance(cities_dict, solution[iterator], solution[0])
