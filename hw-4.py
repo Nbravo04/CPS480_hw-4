@@ -17,8 +17,8 @@ import sys
 
 seed = 0
 maxgen = 0
-popsize = 0
-bestrate = 0
+popsize = 20
+bestrate = 0.2
 mutrate = 0
 
 
@@ -191,7 +191,12 @@ def best_parent_connection(parent, cities_dict):
 #     each of the parents, and then the rest of the paths will be random.
 #     """
 #     return
-
+def keep_top_individuals(population, bestrate, num_cities):
+    keep = bestrate * 10
+    keep_number = round(num_cities / bestrate)
+    population.sort(key=lambda x: x.total_dist, reverse=True)
+    population = population[0:keep_number]
+    return population
 
 # Main
 if __name__ == "__main__":
@@ -204,22 +209,30 @@ if __name__ == "__main__":
     # print(get_distance(cities, 'Bear', 'Camden'))
 
     population = []
-
+    num_cities = len(cities.keys())
+    
     for i in range(popsize):
-        traveler = generate_individual(cities, len(cities.keys()), 'Bear')
+        traveler = generate_individual(cities, num_cities, 'Bear')
         population.append(traveler)
+    inital_best = find_parent(population)
     count = 0
     while count <= maxgen:
         parent = find_parent(population)
         genome = best_parent_connection(parent, cities_dict)
-        population = []
-        for i in range(popsize):
+        population = keep_top_individuals(population, bestrate, num_cities)
+        i = len(population)
+        while i < popsize:
             traveler = generate_child(genome, cities_dict, num_cities, start_city)
             population.append(traveler)
+            i++
         count += 1
         
     best_traveler = find_parent(population)
-    print("Best traveler path found:   " + best_traveler)
+    percent_dif = best_traveler.total_dist / initial_traveler.total_dist * 100
+    
+    print("Initial traveler path: {}".format(initial_best))
+    print("Best traveler path found: {}".format(best_traveler))
+    print("Percent difference {}%".format(percent_diff))
     
     # seed = sys.argv[1]
     # maxgen = sys.argv[2]
