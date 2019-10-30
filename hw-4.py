@@ -113,13 +113,14 @@ def generate_child(best_connection, cities_dict, num_cities, start_city):
 
 def mutate(child, num_cities, cities_dict, mutation_chance):
     if mutation_chance <= random.random():
-        number = random.randint(1, num_cities-1)
-        i = child.visited.index(child.visited[number])
-        if i + 1 == num_cities:
-            child.visited[i], child.visited[i - 1] = child.visited[i - 1], child.visited[i]
-        else:
-            child.visited[i], child.visited[i + 1] = child.visited[i + 1], child.visited[i]
+        city_1 = random.randint(1, num_cities-1)
+        city_2 = random.randint(1, num_cities-1)
+        while city_2 == city_1:
+            city_2 = random.randint(1, num_cities-1)
+            
+        child.visited[city_1], child.visited[city_2] = child.visited[city_2], child.visited[city_1]
         child.total_distance = fitness_function(child.visited, cities_dict)
+        
     return child
 
 
@@ -141,7 +142,7 @@ def fitness_function(solution, cities_dict):
     return score
 
 
-def find_parent(population, cities_dict):
+def find_parent(population):
     for traveler in population:
         if best_distance:
             if best_distance > traveler.total_dist:
@@ -207,8 +208,19 @@ if __name__ == "__main__":
     for i in range(popsize):
         traveler = generate_individual(cities, len(cities.keys()), 'Bear')
         population.append(traveler)
+    count = 0
+    while count <= maxgen:
+        parent = find_parent(population)
+        genome = best_parent_connection(parent, cities_dict)
+        population = []
+        for i in range(popsize):
+            traveler = generate_child(genome, cities_dict, num_cities, start_city)
+            population.append(traveler)
+        count += 1
+        
+    best_traveler = find_parent(population)
+    print("Best traveler path found:   " + best_traveler)
     
-
     # seed = sys.argv[1]
     # maxgen = sys.argv[2]
     # popsize = sys.argv[3]
