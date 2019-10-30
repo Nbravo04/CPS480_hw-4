@@ -121,7 +121,7 @@ def mutate(child, num_cities, cities_dict, mutation_chance):
             child.visited[i], child.visited[i - 1] = child.visited[i - 1], child.visited[i]
         else:
             child.visited[i], child.visited[i + 1] = child.visited[i + 1], child.visited[i]
-        child.total_distance = fitness_function(child.visited, cities_dict)
+        child.total_dist = fitness_function(child.visited, cities_dict)
     return child
 
 
