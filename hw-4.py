@@ -142,6 +142,16 @@ def fitness_function(solution, cities_dict):
     score += get_distance(cities_dict, solution[iterator], solution[0])
     return score
 
+def find_parent(population, cities_dict):
+    for traveler inlation:
+        if best_distance:
+            if best_distance > travler.total_dist:
+                best_distance = traveler.total_dist
+                best_traveler = traveler
+        else:
+            best_distance = traveler.total_dist
+            best_traveler = traveler
+    return best_traveler
 
 def best_parent_connection(parent, cities_dict):
     """
