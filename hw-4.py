@@ -8,15 +8,19 @@ import csv
 # import numpy as np
 import random
 import operator
+
 # import pandas as pd
 # import matplotlib.pyplot as plt
 
 # Seed for Random
+import sys
+
 seed = 0
 maxgen = 0
 popsize = 0
 bestrate = 0
 mutrate = 0
+
 
 # Class
 class Traveler:
@@ -25,7 +29,7 @@ class Traveler:
         self.start_city = start_city
         self.total_dist = total_dist
         self.visited = visited
-        num_cities = num - 1
+        self.num_cities = num - 1
 
     def completed(self, city):
         if city == self.start_city and self.visited == self.num_cities:
@@ -61,6 +65,7 @@ def get_distance(cities_dict, city1, city2):
 
     return cities_dict[city1][count]
 
+
 def generate_individual(cities_dict, num_cities, start_city):
     count = 0
     initial_cities_list = []
@@ -69,12 +74,12 @@ def generate_individual(cities_dict, num_cities, start_city):
         count += 1
 
     numbers = random.sample(range(num_cities), num_cities)
-    cities_list = []
-    cities_list.append(start_city)
-    for number in number:
+    cities_list = [start_city]
+    for number in numbers:
         cities_list.append(initial_cities_list[number])
 
     return Traveler(start_city, fitness_function(cities_list, cities_dict), cities_dict, num_cities)
+
 
 def generate_child(best_connection, cities_dict, num_cities, start_city):
     count = 0
@@ -101,34 +106,36 @@ def generate_child(best_connection, cities_dict, num_cities, start_city):
 
     return Traveler(start_city, fitness_function(cities_list, cities_dict), cities_list, num_cities)
 
+
 def mutate(child, num_cities, cities_dict, mutation_chance):
     if mutation_chance <= random.random():
         number = random.nextint(0, num_cities)
         i = child.visited.index(child.visited[number])
         if i + 1 == num_cities:
-            child.visited[i], child.visited[i-1] = child.visited[i-1], child.visited[i]
+            child.visited[i], child.visited[i - 1] = child.visited[i - 1], child.visited[i]
         else:
-            child.visited[i], child.visited[i+1] = child.visited[i+1], child.visited[i]
+            child.visited[i], child.visited[i + 1] = child.visited[i + 1], child.visited[i]
         child.total_distance = fitness_function(child.visited, cities_dict)
     return child
+
 
 def fitness_function(solution, cities_dict):
     """
     The fitness function for the genetic algorithm sums up the total distance
     traveled following the order of cities provided by the solution given.
     This sum is the solutions score, and it is returned.
-
     IN THE FUTURE: Maybe don't return the score, only compare it if it is
     better. This would save on storage space, but it may negatively affect
     performance. Just an idea to think about.
     """
     score = 0
     iterator = 0
-    while iterator < solution.len():
-        score += get_distance(cities_dict, solution[iterator], solution[iterator+1])
+    while iterator < len(solution):
+        score += get_distance(cities_dict, solution[iterator], solution[iterator + 1])
         iterator += 1
     score += get_distance(cities_dict, solution[iterator], solution[0])
     return score
+
 
 def best_parent_connection(parent, cities_dict):
     """
@@ -144,10 +151,10 @@ def best_parent_connection(parent, cities_dict):
             start = from_city
             end = city
     this_connection = get_distance(cities_dict, parent.visited[-1], parent.start_city)
-    if this_connection > best_connection:
+    if this_connection < best_connection:
         best_connection = this_connection
         start = from_city
-        end = city
+        end = parent.visited[1]
     best_connection_info = {
         "start": start,
         "end": end,
@@ -163,7 +170,6 @@ def best_parent_connection(parent, cities_dict):
 #     each of the parents, and then the rest of the paths will be random.
 #     """
 #     return
-
 
 
 # Main
