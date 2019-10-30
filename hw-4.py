@@ -192,7 +192,7 @@ if __name__ == "__main__":
 
     #print(get_distance(cities, 'Bear', 'Camden'))
 
-    t1 = Traveler('Bear', 0, 0, len(cities.key()))
+    t1 = Traveler('Bear', 0, 0, len(cities.keys()))
     print(t1)
     
     # seed = sys.argv[1]
