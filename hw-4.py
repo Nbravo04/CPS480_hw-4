@@ -16,7 +16,7 @@ import operator
 import sys
 
 seed = 0
-maxgen = 100
+maxgen = 10000
 popsize = 20
 bestrate = 0.2
 mutrate = 0
@@ -191,8 +191,7 @@ def best_parent_connection(parent, cities_dict):
 #     return
 def keep_top_individuals(population, bestrate, num_cities):
     keep_number = round(num_cities * bestrate)
-    print(keep_number)
-    population.sort(key=lambda x: x.total_dist, reverse=True)
+    population.sort(key=lambda x: x.total_dist)
     population = population[0:keep_number]
     return population
 
@@ -229,6 +228,8 @@ if __name__ == "__main__":
     best_traveler = find_parent(population)
     percent_diff = (initial_best.total_dist - best_traveler.total_dist) / initial_best.total_dist * 100
 
+    print("Initial distance: {}".format(initial_best.total_dist))
+    print("Final distance: {}".format(best_traveler.total_dist))
     print("Initial traveler path: {}".format(initial_best))
     print("Best traveler path found: {}".format(best_traveler))
     print("Percent difference {}%".format(percent_diff))
@@ -238,3 +239,4 @@ if __name__ == "__main__":
     # popsize = sys.argv[3]
     # bestrate = sys.argv[4]
     # mutrate = sys.argv[5]
+
