@@ -38,10 +38,7 @@ class Traveler:
             return False
 
     def __str__(self):
-        my_string = 'Start City: {}, Num of cities visited: {},' \
-                    ' Cities left to visit: {}'.format(self.start_city, self.visited, self.num_cities - self.visited)
-
-        return my_string
+        return ''.join(self.visited)
 
 
 # Functions
@@ -84,7 +81,7 @@ def generate_individual(cities_dict, num_cities, start_city):
         else:
             cities_list.append(initial_cities_list[number])
 
-    return Traveler(start_city, fitness_function(cities_list, cities_dict), cities_dict, num_cities)
+    return Traveler(start_city, fitness_function(cities_list, cities_dict), cities_list, num_cities)
 
 
 def generate_child(best_connection, cities_dict, num_cities, start_city):
@@ -161,7 +158,7 @@ def best_parent_connection(parent, cities_dict):
     """
     best_connection = 10000000
     i = 0
-    while i < parent.num_cities:
+    while i < parent.num_cities-1:
         from_city = parent.visited[i]
         i += 1
         end_city = parent.visited[i]
@@ -214,7 +211,7 @@ if __name__ == "__main__":
     for i in range(popsize):
         traveler = generate_individual(cities, num_cities, 'Bear')
         population.append(traveler)
-    inital_best = find_parent(population)
+    initial_best = find_parent(population)
     count = 0
     while count <= maxgen:
         parent = find_parent(population)
@@ -228,7 +225,7 @@ if __name__ == "__main__":
         count += 1
 
     best_traveler = find_parent(population)
-    percent_dif = best_traveler.total_dist / initial_traveler.total_dist * 100
+    percent_diff = (initial_best.total_dist - best_traveler.total_dist) / initial_best.total_dist * 100
 
     print("Initial traveler path: {}".format(initial_best))
     print("Best traveler path found: {}".format(best_traveler))
