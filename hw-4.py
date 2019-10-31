@@ -17,7 +17,7 @@ import sys
 
 seed = 0
 maxgen = 10000
-popsize = 20
+popsize = 40
 bestrate = 0.2
 mutrate = 0
 
@@ -198,7 +198,7 @@ def keep_top_individuals(population, bestrate, num_cities):
 # Main
 if __name__ == "__main__":
     file1 = 'DE-all.csv'
-    file2 = 'MI.xlsx'
+    file2 = 'MI.csv'
     file3 = 'MI-part-19-miles.csv'
 
     cities = get_dict(file1)
@@ -207,7 +207,7 @@ if __name__ == "__main__":
 
     population = []
     num_cities = len(cities.keys())
-    start_city = "Bear"
+    start_city = numbers = random.sample(range(num_cities), 1)
     for i in range(popsize):
         traveler = generate_individual(cities, num_cities, start_city)
         population.append(traveler)
@@ -228,11 +228,11 @@ if __name__ == "__main__":
     best_traveler = find_parent(population)
     percent_diff = (initial_best.total_dist - best_traveler.total_dist) / initial_best.total_dist * 100
 
-    print("Initial distance: {}".format(initial_best.total_dist))
-    print("Final distance: {}".format(best_traveler.total_dist))
+    print("Initial distance: {:.2f}".format(initial_best.total_dist))
+    print("Final distance: {:.2f}".format(best_traveler.total_dist))
     print("Initial traveler path: {}".format(initial_best))
     print("Best traveler path found: {}".format(best_traveler))
-    print("Percent difference {}%".format(percent_diff))
+    print("Percent difference {:.2f}%".format(percent_diff))
 
     # seed = sys.argv[1]
     # maxgen = sys.argv[2]
