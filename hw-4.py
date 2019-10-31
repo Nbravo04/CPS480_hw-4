@@ -68,7 +68,7 @@ def get_distance(cities_dict, city1, city2):
             break
         count += 1
 
-    return cities_dict[city1][count]
+    return float(cities_dict[city1][count])
 
 
 def generate_individual(cities_dict, num_cities, start_city):
@@ -117,10 +117,10 @@ def mutate(child, num_cities, cities_dict, mutation_chance):
         city_2 = random.randint(1, num_cities-1)
         while city_2 == city_1:
             city_2 = random.randint(1, num_cities-1)
-            
+
         child.visited[city_1], child.visited[city_2] = child.visited[city_2], child.visited[city_1]
         child.total_distance = fitness_function(child.visited, cities_dict)
-        
+
     return child
 
 
@@ -144,7 +144,7 @@ def fitness_function(solution, cities_dict):
 
 def find_parent(population):
     for traveler in population:
-        if best_distance:
+        if "best_distance" in locals():
             if best_distance > traveler.total_dist:
                 best_distance = traveler.total_dist
                 best_traveler = traveler
@@ -210,7 +210,7 @@ if __name__ == "__main__":
 
     population = []
     num_cities = len(cities.keys())
-    
+
     for i in range(popsize):
         traveler = generate_individual(cities, num_cities, 'Bear')
         population.append(traveler)
@@ -218,22 +218,22 @@ if __name__ == "__main__":
     count = 0
     while count <= maxgen:
         parent = find_parent(population)
-        genome = best_parent_connection(parent, cities_dict)
+        genome = best_parent_connection(parent, cities)
         population = keep_top_individuals(population, bestrate, num_cities)
         i = len(population)
         while i < popsize:
-            traveler = generate_child(genome, cities_dict, num_cities, start_city)
+            traveler = generate_child(genome, cities, num_cities, start_city)
             population.append(traveler)
             i += 1
         count += 1
-        
+
     best_traveler = find_parent(population)
     percent_dif = best_traveler.total_dist / initial_traveler.total_dist * 100
-    
+
     print("Initial traveler path: {}".format(initial_best))
     print("Best traveler path found: {}".format(best_traveler))
     print("Percent difference {}%".format(percent_diff))
-    
+
     # seed = sys.argv[1]
     # maxgen = sys.argv[2]
     # popsize = sys.argv[3]
