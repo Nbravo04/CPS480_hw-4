@@ -201,13 +201,17 @@ if __name__ == "__main__":
     file2 = 'MI.csv'
     file3 = 'MI-part-19-miles.csv'
 
-    cities = get_dict(file1)
+    cities = get_dict(file3)
 
     # print(get_distance(cities, 'Bear', 'Camden'))
 
     population = []
     num_cities = len(cities.keys())
-    start_city = numbers = random.sample(range(num_cities), 1)
+    start_city = random.randint(0, len(cities.keys()))
+    for count, key in enumerate(cities.keys()):
+        if count == start_city:
+            start_city = key
+
     for i in range(popsize):
         traveler = generate_individual(cities, num_cities, start_city)
         population.append(traveler)
