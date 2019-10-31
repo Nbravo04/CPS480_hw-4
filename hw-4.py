@@ -16,7 +16,7 @@ import operator
 import sys
 
 seed = 0
-maxgen = 0
+maxgen = 100
 popsize = 20
 bestrate = 0.2
 mutrate = 0
@@ -38,8 +38,9 @@ class Traveler:
             return False
 
     def __str__(self):
-        return ''.join(self.visited)
-
+        my_string = ' --> '.join(self.visited)
+        my_string += ' --> {}'.format(self.start_city)
+        return my_string
 
 # Functions
 def get_dict(file):
@@ -189,8 +190,8 @@ def best_parent_connection(parent, cities_dict):
 #     """
 #     return
 def keep_top_individuals(population, bestrate, num_cities):
-    keep = bestrate * 10
-    keep_number = round(num_cities / bestrate)
+    keep_number = round(num_cities * bestrate)
+    print(keep_number)
     population.sort(key=lambda x: x.total_dist, reverse=True)
     population = population[0:keep_number]
     return population
@@ -207,9 +208,9 @@ if __name__ == "__main__":
 
     population = []
     num_cities = len(cities.keys())
-
+    start_city = "Bear"
     for i in range(popsize):
-        traveler = generate_individual(cities, num_cities, 'Bear')
+        traveler = generate_individual(cities, num_cities, start_city)
         population.append(traveler)
     initial_best = find_parent(population)
     count = 0
@@ -218,6 +219,7 @@ if __name__ == "__main__":
         genome = best_parent_connection(parent, cities)
         population = keep_top_individuals(population, bestrate, num_cities)
         i = len(population)
+
         while i < popsize:
             traveler = generate_child(genome, cities, num_cities, start_city)
             population.append(traveler)
