@@ -1,18 +1,46 @@
-# Nicholas J Bravata and Thaddeus Warner
-# CPS 480 Assignment 4 Genetic Algorithm
-# Started: Oct 23, 2019
+"""
+Nicholas J Bravata and Thaddeus Warner
+CPS 480 Assignment 4 Genetic Algorithm
+Started: Oct 23, 2019
 
+Our program utilizes a genetic algorithm to find a solution to the
+traveling salesmen problem with data provided in the zip files.
+Our algorithms works by first generating a population using random
+numbers that correspond to cities, and the sequence of those numbers
+are the order that they are traveled to. Then we prune the population
+by taking the top 20% measured by the total distance traveled. Next we
+find the parent which is the traveler with the lowest total distance.
+Then we generate children by using the best city connection of the parent
+being required by all children, and the rest of the city connections
+are generated using random numbers just like the inital population was.
+When we generate children we also check if they should mutate by
+generating a random number between 0 and 1 and comparing that to the
+provided mutation rate (mutrate). If the child should mutate, we
+switch two random cities, not including the start or end city.
+We do this thousands and thousands of times until we have the best
+solution found from thousands of generations of optimization. This
+is our best result for that run.
+
+To compile and run our program (assuming python 3 is installed and
+added to your path: if it is not, see our assignment three, submitted
+by Thaddeus Warner, and there will be instrunctions on how to do that
+in the txt file), all you have to do is type "python hw4.py". To change
+the constant variables, you have to edit the code and change them. They
+are found at the top. In hindsight, we should have made them command line
+arguments, but when we had to run it hundreds of times, it was easier to
+hard code every constant to avoid having to put in command line arguments.
+"""
 # Imports
 import csv
 import random
 import operator
 import sys
 
-seed = 7
-maxgen = 100
-popsize = 23
+seed = 4320
+maxgen = 10000
+popsize = 20
 bestrate = 0.2
-mutrate = 0.3
+mutrate = 0.1
 
 random.seed(seed)
 
@@ -216,7 +244,7 @@ if __name__ == "__main__":
     file2 = 'MI.csv'
     file3 = 'MI-part-19-miles.csv'
 
-    cities = get_dict(file3)
+    cities = get_dict(file1)
 
     population = []
     num_cities = len(cities.keys())
@@ -248,7 +276,6 @@ if __name__ == "__main__":
 
     print("Initial distance: {:.2f}".format(initial_best.total_dist))
     print("Final distance: {:.2f}".format(best_traveler.total_dist))
-    print("Initial traveler path: {}".format(initial_best))
-    print("Best traveler path found: {}".format(best_traveler))
+    # print("Initial traveler path: {}".format(initial_best))
+    # print("Best traveler path found: {}".format(best_traveler))
     print("Percent difference {:.2f}%".format(percent_diff))
-
