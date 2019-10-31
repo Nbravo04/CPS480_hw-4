@@ -92,17 +92,17 @@ def generate_child(best_connection, cities_dict, num_cities, start_city):
 
     numbers = random.sample(range(num_cities), num_cities)
     cities_list = []
-    if best_connection.start == start_city:
-        cities_list.append(best_connection.start)
-        cities_list.append(best_connection.end)
+    if best_connection["start"] == start_city:
+        cities_list.append(best_connection["start"])
+        cities_list.append(best_connection["end"])
     else:
         cities_list.append(start_city)
     for number in numbers:
         city = initial_cities_list[number]
         if city not in cities_list:
-            if city == best_connection.start:
-                cities_list.append(best_connection.start)
-                cities_list.append(best_connection.end)
+            if city == best_connection["start"]:
+                cities_list.append(best_connection["start"])
+                cities_list.append(best_connection["end"])
             else:
                 cities_list.append(initial_cities_list[number])
 
