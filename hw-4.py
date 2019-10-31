@@ -15,12 +15,13 @@ import operator
 # Seed for Random
 import sys
 
-seed = 0
+seed = 7
 maxgen = 10000
 popsize = 40
 bestrate = 0.2
 mutrate = 0
 
+random.seed(seed)
 
 # Class
 class Traveler:
