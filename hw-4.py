@@ -4,28 +4,25 @@
 
 # Imports
 import csv
-
-# import numpy as np
 import random
 import operator
-
-# import pandas as pd
-# import matplotlib.pyplot as plt
-
-# Seed for Random
 import sys
 
 seed = 7
-maxgen = 10000
-popsize = 40
+maxgen = 100
+popsize = 23
 bestrate = 0.2
-mutrate = 0
+mutrate = 0.3
 
 random.seed(seed)
 
 # Class
 class Traveler:
-
+    """
+    Traveler class represents an idividual. It stores the start city, the
+    total distance of the solution, the order of the cities visited, and the
+    number of cities.
+    """
     def __init__(self, start_city, total_dist, visited, num):
         self.start_city = start_city
         self.total_dist = total_dist
@@ -45,6 +42,11 @@ class Traveler:
 
 # Functions
 def get_dict(file):
+    """
+    get_dict reads a csv file and converts the data from cities and distance
+    and stores it in a dictionary whose keys are the city name and the value
+    is an array that hold the distance to all other cities.
+    """
     csv_file = open(file, 'r')
     city_dict = {}
     csv_reader = csv.reader(csv_file)
@@ -61,6 +63,9 @@ def get_dict(file):
 
 
 def get_distance(cities_dict, city1, city2):
+    """
+    get_distance reads a city_dict and returns the distance between two cities.
+    """
     count = -1
     for city in cities_dict.keys():
         if city == city2:
@@ -71,6 +76,10 @@ def get_distance(cities_dict, city1, city2):
 
 
 def generate_individual(cities_dict, num_cities, start_city):
+    """
+    generate_individual generates an individual by using random numbers to
+    represent the path traveled for a traveler
+    """
     initial_cities_list = []
     for key in cities_dict.keys():
         initial_cities_list.append(key)
@@ -87,6 +96,11 @@ def generate_individual(cities_dict, num_cities, start_city):
 
 
 def generate_child(best_connection, cities_dict, num_cities, start_city):
+    """
+    generate_child generates an child by using random numbers to
+    represent the path traveled for a traveler while also incorporating the
+    best city connection from the parent city
+    """
     initial_cities_list = []
     for key in cities_dict.keys():
         initial_cities_list.append(key)
@@ -111,7 +125,13 @@ def generate_child(best_connection, cities_dict, num_cities, start_city):
 
 
 def mutate(child, num_cities, cities_dict, mutation_chance):
-    if mutation_chance <= random.random():
+    """
+    mutate will check if the individual should be mutated using a random float
+    between 0 and 1 and comparing it to the mutation chance. If yes, then
+    it flips the location of two random cities (but never the starting city)
+    """
+    randomnum = random.random()
+    if mutation_chance >= randomnum:
         city_1 = random.randint(1, num_cities-1)
         city_2 = random.randint(1, num_cities-1)
         while city_2 == city_1:
@@ -128,9 +148,6 @@ def fitness_function(solution, cities_dict):
     The fitness function for the genetic algorithm sums up the total distance
     traveled following the order of cities provided by the solution given.
     This sum is the solutions score, and it is returned.
-    IN THE FUTURE: Maybe don't return the score, only compare it if it is
-    better. This would save on storage space, but it may negatively affect
-    performance. Just an idea to think about.
     """
     score = 0
     iterator = 0
@@ -183,14 +200,11 @@ def best_parent_connection(parent, cities_dict):
     return best_connection_info
 
 
-# def generate_and_mutate(p1_connetion, p2_connection, cities_dict):
-#     """
-#     This function will not only generate children, but it will mutate them
-#     as well. The children will contain the best path available from
-#     each of the parents, and then the rest of the paths will be random.
-#     """
-#     return
 def keep_top_individuals(population, bestrate, num_cities):
+    """
+    keep_top_individuals will keep the top bestrate percent of travelers
+    found so far. So if bestrate is 0.2, 20% of the travelers will be kept.
+    """
     keep_number = round(num_cities * bestrate)
     population.sort(key=lambda x: x.total_dist)
     population = population[0:keep_number]
@@ -203,8 +217,6 @@ if __name__ == "__main__":
     file3 = 'MI-part-19-miles.csv'
 
     cities = get_dict(file3)
-
-    # print(get_distance(cities, 'Bear', 'Camden'))
 
     population = []
     num_cities = len(cities.keys())
@@ -226,6 +238,7 @@ if __name__ == "__main__":
 
         while i < popsize:
             traveler = generate_child(genome, cities, num_cities, start_city)
+            traveler = mutate(traveler, num_cities, cities, mutrate)
             population.append(traveler)
             i += 1
         count += 1
@@ -238,10 +251,4 @@ if __name__ == "__main__":
     print("Initial traveler path: {}".format(initial_best))
     print("Best traveler path found: {}".format(best_traveler))
     print("Percent difference {:.2f}%".format(percent_diff))
-
-    # seed = sys.argv[1]
-    # maxgen = sys.argv[2]
-    # popsize = sys.argv[3]
-    # bestrate = sys.argv[4]
-    # mutrate = sys.argv[5]
 
